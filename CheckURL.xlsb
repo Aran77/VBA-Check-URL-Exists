@@ -1,0 +1,36 @@
+Sub checkURL()
+    lRow = Range("A" & Rows.Count).End(xlUp).Row
+    checkflag = 0
+    For i = 2 To lRow
+        'Debug.Print (i)
+        url = Range("AH" & i)
+        If Range("B" & i) = "yes" Then
+            If URLExists(Range("AH" & i)) = True Then
+                Range("AO" & i) = "Yes"
+            Else
+                Range("AO" & i) = "No"
+                checkflag = 1
+            End If
+        End If
+    Next
+    If checkflag = 1 Then
+        MsgBox ("Image Errors")
+    End If
+End Sub
+
+Function URLExists(url As String) As Boolean
+    Dim Request As Object
+    Dim ff As Integer
+    Dim rc As Variant
+    On Error GoTo EndNow
+    Set Request = CreateObject("WinHttp.WinHttpRequest.5.1")
+    With Request
+      .Open "GET", url, False
+      .Send
+      rc = .StatusText
+    End With
+    Set Request = Nothing
+    If rc = "OK" Then URLExists = True
+    Exit Function
+EndNow:
+End Function
